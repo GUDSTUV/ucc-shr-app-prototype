@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+
+/* CEGRAD Design Tokens */
+:root {
+  --navy:        #263875;
+  --navy-dark:   #1a2754;
+  --navy-light:  #EEF1FA;
+  --red:         #E63946;
+  --red-dark:    #C0202E;
+  --red-light:   #FDECEA;
+  --gray-50:     #F7F8FA;
+  --gray-100:    #EDEEF2;
+  --gray-400:    #9197AD;
+  --gray-600:    #5C6280;
+  --gray-900:    #1A1D2E;
+  --touch-min:   44px;
+  --touch-nav:   56px;
+}
+
+@theme {
+  --color-navy: var(--navy);
+  --color-navy-dark: var(--navy-dark);
+  --color-navy-light: var(--navy-light);
+  --color-red: var(--red);
+  --color-red-dark: var(--red-dark);
+  --color-red-light: var(--red-light);
+  --font-sans: var(--font-poppins);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--gray-50);
+  color: var(--gray-900);
+}
+
+@keyframes report-pop {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.06);
+  }
+}
+
+.report-pop {
+  animation: report-pop 2.2s ease-in-out infinite;
+}
+
+/* Prevent iOS auto-zoom on inputs */
+input, select, textarea { font-size: 16px !important; }
+
+/* Prevent pull-to-refresh */
+body { overscroll-behavior-y: contain; }
