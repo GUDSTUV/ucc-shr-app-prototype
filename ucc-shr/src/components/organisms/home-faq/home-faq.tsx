@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { FaqItem } from '@/src/components/molecules/faq-item'
 
 const faqs = [
@@ -29,11 +30,18 @@ const faqs = [
 ]
 
 export function HomeFaq() {
+  const previewFaqs = faqs.slice(0, 3)
+
   return (
     <section className="mt-6 space-y-3">
-      <h2 className="text-base font-bold text-navy">Frequently Asked Questions</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-base font-bold text-navy">Frequently Asked Questions</h2>
+        <Link href="/about#faq" className="text-xs font-semibold text-navy hover:underline">
+          See all FAQ
+        </Link>
+      </div>
       <div className="space-y-2">
-        {faqs.map((faq) => (
+        {previewFaqs.map((faq) => (
           <FaqItem key={faq.question} question={faq.question} answer={faq.answer} />
         ))}
       </div>

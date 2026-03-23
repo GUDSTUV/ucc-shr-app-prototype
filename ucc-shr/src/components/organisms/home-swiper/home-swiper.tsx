@@ -9,8 +9,16 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    title: 'Safety Message',
-    message: 'Your safety comes first. Report sexual harassment incidents early so support can begin quickly.',
+    title: 'Report Sexual Harassment',
+    message: 'This platform helps you safely report sexual harassment, intimidation, unwanted behavior, and boundary violations with confidence.',
+  },
+  {
+    title: "Don't Stay Silent",
+    message: 'Report sexual harassment today. Help is here. You deserve to be heard and supported.',
+  },
+  {
+    title: 'Learn & Recognize',
+    message: 'Understand warning signs like unwanted messages, coercion, intimidation, and repeated boundary violations so you can recognize harmful behavior.',
   },
   {
     title: 'Anonymous Reporting',
@@ -23,10 +31,6 @@ const slides: Slide[] = [
   {
     title: 'Track & Follow Up',
     message: 'Use your report code to track progress and receive updates privately.',
-  },
-  {
-    title: 'Know The Warning Signs',
-    message: 'Learn common red flags like unwanted messages, coercion, intimidation, and repeated boundary violations.',
   },
   {
     title: 'Support Is Available',
