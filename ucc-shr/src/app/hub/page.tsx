@@ -1,11 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import { Bell, BookMarked, CalendarClock, Search, UserRound } from 'lucide-react'
 import { PublicLayout } from '@/src/components/templates/public-layout'
-import { Input } from '@/src/components/atoms/input'
-import { Button } from '@/src/components/atoms/button'
+import { HubHeader } from '@/src/components/organisms/hub-header/hub-header'
+import { HubFilterChips } from '@/src/components/molecules/hub-filter-chips/hub-filter-chips'
+import { HubFeedCard } from '@/src/components/organisms/hub-feed-card/hub-feed-card'
 
 type HubCategory = 'All' | 'Awareness' | 'Workshop' | 'Safety Tips' | 'Events'
 
@@ -37,7 +36,7 @@ const items: HubItem[] = [
 		excerpt: 'Learn how to recognize burnout signs and offer meaningful support to colleagues.',
 		category: 'Awareness',
 		readTime: '5 min read',
-		imageTheme: 'from-[#B9D66E] via-[#9DBE59] to-[#6E8F3B]',
+		imageTheme: 'from-navy-light via-white to-gray-100',
 	},
 	{
 		id: 2,
@@ -48,7 +47,7 @@ const items: HubItem[] = [
 		dateLabel: 'OCT 24',
 		timeLabel: '14:00 - 16:30',
 		isRegistration: true,
-		imageTheme: 'from-[#493321] via-[#6E4B2C] to-[#2E2219]',
+		imageTheme: 'from-navy via-navy-dark to-gray-900',
 	},
 	{
 		id: 3,
@@ -56,7 +55,7 @@ const items: HubItem[] = [
 		excerpt: 'Quick steps to keep personal records and project files protected online.',
 		category: 'Safety Tips',
 		readTime: '3 min read',
-		imageTheme: 'from-[#0C2A44] via-[#134A66] to-[#081B30]',
+		imageTheme: 'from-navy-dark via-navy to-gray-900',
 	},
 	{
 		id: 4,
@@ -64,7 +63,7 @@ const items: HubItem[] = [
 		excerpt: 'Practical examples to help you identify suspicious links and protect your account access.',
 		category: 'Awareness',
 		readTime: '4 min read',
-		imageTheme: 'from-[#2A4365] via-[#3B5E8B] to-[#1D3557]',
+		imageTheme: 'from-navy via-navy-dark to-gray-900',
 	},
 	{
 		id: 5,
@@ -75,7 +74,7 @@ const items: HubItem[] = [
 		dateLabel: 'NOV 06',
 		timeLabel: '09:30 - 11:00',
 		isRegistration: true,
-		imageTheme: 'from-[#1F5E5C] via-[#2E8B87] to-[#134240]',
+		imageTheme: 'from-navy-dark via-navy to-gray-900',
 	},
 	{
 		id: 6,
@@ -83,7 +82,7 @@ const items: HubItem[] = [
 		excerpt: 'Simple routines to improve focus, reduce burnout, and build healthier screen habits.',
 		category: 'Awareness',
 		readTime: '6 min read',
-		imageTheme: 'from-[#6A4C93] via-[#7B5AA6] to-[#51306F]',
+		imageTheme: 'from-navy-light via-white to-gray-100',
 	},
 ]
 
@@ -108,120 +107,35 @@ export default function HubPage() {
 	return (
 		<PublicLayout>
 			<div className="font-sans">
-			<header className="space-y-4">
-				<div className="flex items-center justify-between">
-					<Link
-						href="/user/profile"
-						className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-navy-light text-navy"
-						aria-label="Open profile"
-					>
-						<UserRound size={20} />
-					</Link>
+				<HubHeader search={search} onSearchChange={setSearch} />
+				<HubFilterChips
+					categories={categories}
+					activeCategory={activeCategory}
+					onCategoryChange={setActiveCategory}
+				/>
 
-					<h1 className="text-2xl font-bold text-navy">Posts &amp; Events</h1>
+				<section className="mt-6 space-y-5">
+					{filteredItems.map((item) => (
+						<HubFeedCard
+							key={item.id}
+							title={item.title}
+							excerpt={item.excerpt}
+							category={item.category}
+							readTime={item.readTime}
+							dateLabel={item.dateLabel}
+							timeLabel={item.timeLabel}
+							isRegistration={item.isRegistration}
+							imageTheme={item.imageTheme}
+							categoryBadgeClass={categoryBadgeStyles[item.category]}
+						/>
+					))}
 
-					<button
-						type="button"
-						className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-navy-light text-navy"
-						aria-label="Notifications"
-					>
-						<Bell size={20} />
-					</button>
-				</div>
-
-				<div className="relative">
-					<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-navy" size={18} />
-					<Input
-						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-						placeholder="Search posts or events"
-						className="h-12 rounded-xl border-gray-100 bg-white pl-11 text-[15px]"
-					/>
-				</div>
-
-				<div className="-mx-4 overflow-x-auto px-4">
-					<div className="flex min-w-max gap-3 pb-1">
-						{categories.map((category) => {
-							const active = activeCategory === category
-							return (
-								<button
-									key={category}
-									type="button"
-									onClick={() => setActiveCategory(category)}
-									className={`h-10 rounded-full border px-5 text-sm font-semibold transition ${
-										active
-											? 'border-navy bg-navy text-white'
-											: 'border-gray-100 bg-white text-gray-600 hover:border-navy hover:text-navy'
-									}`}
-								>
-									{category}
-								</button>
-							)
-						})}
-					</div>
-				</div>
-			</header>
-
-			<section className="mt-6 space-y-5">
-				{filteredItems.map((item) => (
-					<article key={item.id} className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-						<div className={`relative h-52 bg-linear-to-br ${item.imageTheme}`}>
-							{item.dateLabel ? (
-								<div className="absolute left-4 top-4 rounded-lg bg-white px-3 py-1 text-sm font-bold text-gray-900">
-									{item.dateLabel}
-								</div>
-							) : null}
-							<button
-								type="button"
-								aria-label="Bookmark"
-								className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-navy"
-							>
-								<BookMarked size={18} />
-							</button>
-							<div
-								className={`absolute bottom-4 left-4 rounded-full px-3 py-1 text-xs font-semibold tracking-wide ${categoryBadgeStyles[item.category]}`}
-							>
-								{item.category.toUpperCase()}
-							</div>
+					{filteredItems.length === 0 ? (
+						<div className="rounded-2xl border border-gray-100 bg-white p-5 text-center text-sm text-gray-600">
+							No results for this filter yet.
 						</div>
-
-						<div className="space-y-3 p-4">
-							<div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-navy">
-								{item.timeLabel ? (
-									<span className="inline-flex items-center gap-1 text-gray-600">
-										<CalendarClock size={12} />
-										{item.timeLabel}
-									</span>
-								) : null}
-							</div>
-
-							<h2 className="text-2xl leading-tight font-semibold text-gray-900 sm:text-[28px]">
-								{item.title}
-							</h2>
-							<p className="text-base text-gray-600">{item.excerpt}</p>
-
-							{item.isRegistration ? (
-								<Button variant="report" fullWidth className="h-12 rounded-xl">
-									Register Now
-								</Button>
-							) : (
-								<div className="flex items-center justify-between">
-									<button type="button" className="text-base font-semibold text-navy hover:text-navy-dark">
-										Read More
-									</button>
-									<span className="text-sm text-gray-600">{item.readTime}</span>
-								</div>
-							)}
-						</div>
-					</article>
-				))}
-
-				{filteredItems.length === 0 ? (
-					<div className="rounded-2xl border border-gray-100 bg-white p-5 text-center text-sm text-gray-600">
-						No results for this filter yet.
-					</div>
-				) : null}
-			</section>
+					) : null}
+				</section>
 			</div>
 		</PublicLayout>
 	)

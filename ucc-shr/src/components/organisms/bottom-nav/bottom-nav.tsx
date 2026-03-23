@@ -8,6 +8,10 @@ export function BottomNav() {
   const path = usePathname()
   const searchParams = useSearchParams()
 
+  if (path.startsWith('/admin')) {
+    return null
+  }
+
   // Build profile href with user data if available
   const profileHref = (() => {
     const name = searchParams.get('name')
@@ -47,10 +51,10 @@ export function BottomNav() {
         />
 
         <MobileNavItem
-          href="/help"
-          label="Resources"
+          href="/about"
+          label="About"
           icon={<BookText size={20} strokeWidth={2.3} />}
-          active={path === '/help'}
+          active={path === '/about'}
         />
 
         <MobileNavItem

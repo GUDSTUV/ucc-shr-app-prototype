@@ -1,10 +1,20 @@
 import { FormLayout } from '@/src/components/templates/form-layout'
 import { ReportForm } from '@/src/components/organisms/report-form'
 
-export default function NewReportPage() {
+type NewReportPageProps = {
+  searchParams?: Promise<{
+    name?: string
+    email?: string
+  }>
+}
+
+export default async function NewReportPage({ searchParams }: NewReportPageProps) {
+  const params = (await searchParams) ?? {}
+  const hasAccount = Boolean(params.name && params.email)
+
   return (
-    <FormLayout title="Anonymous Report">
-      <ReportForm />
+    <FormLayout title={hasAccount ? 'New Report' : 'Anonymous Report'}>
+      <ReportForm canToggleAnonymous={hasAccount} />
     </FormLayout>
   )
 }

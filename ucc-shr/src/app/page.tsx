@@ -13,25 +13,31 @@ export default function HomePage() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <div className="-mx-4 -mt-6 bg-navy px-6 py-8 mb-5 rounded-bl-xl rounded-br-xl text-white">
-        <div className="mb-4 inline-flex items-center rounded-xl bg-white/10 p-2">
-          <Image
-            src="/icons/logo.svg"
-            alt="CEGRAD logo"
-            width={44}
-            height={44}
-            priority
-            className="h-11 w-11"
-          />
-        </div>
+      <div className="-mx-4 -mt-6 bg-navy px-6 py-8 mb-8 rounded-bl-xl rounded-br-xl text-white">
+        <div className="flex items-center mt-8 gap-5">
+          {/* Logo */}
+          <div className="shrink-0 inline-flex items-center justify-center rounded-xl bg-white/10 p-3">
+            <Image
+              src="/icons/logo.svg"
+              alt="CEGRAD logo"
+              width={52}
+              height={52}
+              priority
+              className="h-13 w-13"
+            />
+          </div>
 
-        <p className="text-xs font-semibold tracking-widest opacity-50 uppercase mb-2">
-          University of Cape Coast
-        </p>
-        <h1 className="text-2xl font-bold leading-tight mb-1">CEGRAD</h1>
-        <p className="text-sm opacity-60 font-light">
-          Centre for Gender Research, Advocacy & Documentation
-        </p>
+          {/* Text Content */}
+          <div className="flex-1">
+            <p className="text-xs font-semibold tracking-widest opacity-50 uppercase mb-1">
+              University of Cape Coast
+            </p>
+            <h1 className="text-3xl font-bold leading-tight mb-1">CEGRAD</h1>
+            <p className="text-sm opacity-70 font-light">
+              Centre for Gender Research, Advocacy & Documentation
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Swipeable message slider */}

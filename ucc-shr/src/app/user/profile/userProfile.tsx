@@ -203,8 +203,8 @@ export default function UserProfile({ name, email }: { name?: string; email?: st
 				)}
 
 				<footer className="mt-12 py-8 text-center">
-					<p className="text-xs text-gray-400">UCC Mobile PWA v2.4.0</p>
-					<p className="mt-1 text-xs text-gray-400">© 2024 United Communications Commission</p>
+					<p className="text-xs text-gray-400">UCC-SHR Mobile PWA v2.4.0</p>
+					<p className="mt-1 text-xs text-gray-400">© 2026 CEGRAD-UCC</p>
 				</footer>
 			</main>
 		</div>

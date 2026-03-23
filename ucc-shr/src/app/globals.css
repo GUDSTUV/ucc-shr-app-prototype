@@ -25,7 +25,7 @@
   --color-red: var(--red);
   --color-red-dark: var(--red-dark);
   --color-red-light: var(--red-light);
-  --font-sans: var(--font-poppins);
+  --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {

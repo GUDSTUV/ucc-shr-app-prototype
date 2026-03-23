@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Camera, FileText, Mic, UserPlus, EyeOff } from 'lucide-react'
 import { Button } from '@/src/components/atoms/button'
 import { Input } from '@/src/components/atoms/input'
@@ -9,12 +9,17 @@ import { FormField } from '@/src/components/molecules/form-field'
 import { StepIndicator } from '@/src/components/molecules/step-indicator'
 import { AlertBox } from '@/src/components/molecules/alert-box'
 
-export function ReportForm() {
+type ReportFormProps = {
+  canToggleAnonymous?: boolean
+}
+
+export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
   const totalSteps = 3
   const [step, setStep] = useState(1)
   const [submitting, setSubmitting] = useState(false)
   const [typeValue, setTypeValue] = useState('')
   const [locationValue, setLocationValue] = useState('')
+  const [contactValue, setContactValue] = useState('')
   const [descriptionValue, setDescriptionValue] = useState('')
   const [witness, setWitness] = useState('')
   const [witnesses, setWitnesses] = useState<string[]>([])
@@ -23,6 +28,12 @@ export function ReportForm() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submittedCode, setSubmittedCode] = useState<string | null>(null)
   const [stepError, setStepError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!canToggleAnonymous) {
+      setAnonymous(true)
+    }
+  }, [canToggleAnonymous])
 
   const addWitness = () => {
     const value = witness.trim()
@@ -50,8 +61,9 @@ export function ReportForm() {
     const payload = {
       type: typeValue,
       location: locationValue,
+      contact: contactValue,
       description: descriptionValue,
-      isAnonymous: anonymous,
+      isAnonymous: canToggleAnonymous ? anonymous : true,
       witnesses,
       evidenceFiles,
     }
@@ -80,6 +92,7 @@ export function ReportForm() {
   setStep(1)
   setTypeValue('')
   setLocationValue('')
+  setContactValue('')
   setDescriptionValue('')
       setWitness('')
       setWitnesses([])
@@ -154,6 +167,15 @@ export function ReportForm() {
             />
           </FormField>
 
+          <FormField label="Contact (phone or email)">
+            <Input
+              name="contact"
+              value={contactValue}
+              onChange={(event) => setContactValue(event.target.value)}
+              placeholder="How can we reach you for follow-up?"
+            />
+          </FormField>
+
           <FormField label="Description" required>
             <Textarea
               name="description"
@@ -224,33 +246,37 @@ export function ReportForm() {
             ) : null}
           </div>
 
-          <div className="flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2">
-            <div className="flex items-start gap-2">
-              <EyeOff size={15} className="mt-0.5 text-navy" />
-              <div>
-                <p className="text-[12px] font-semibold text-gray-800">Report Anonymously</p>
-                <p className="text-[11px] text-gray-500">
-                  {anonymous ? 'Identity will not be revealed' : 'Identity may be shared for follow-up'}
-                </p>
+          {canToggleAnonymous ? (
+            <>
+              <div className="flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2">
+                <div className="flex items-start gap-2">
+                  <EyeOff size={15} className="mt-0.5 text-navy" />
+                  <div>
+                    <p className="text-[12px] font-semibold text-gray-800">Report Anonymously</p>
+                    <p className="text-[11px] text-gray-500">
+                      {anonymous ? 'Identity will not be revealed' : 'Identity may be shared for follow-up'}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={anonymous}
+                  onClick={() => setAnonymous((prev) => !prev)}
+                  className={`relative h-7 w-12 rounded-full transition-colors ${anonymous ? 'bg-navy' : 'bg-gray-300'}`}
+                >
+                  <span
+                    className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${anonymous ? 'translate-x-6' : 'translate-x-1'}`}
+                  />
+                </button>
               </div>
-            </div>
 
-            <button
-              type="button"
-              role="switch"
-              aria-checked={anonymous}
-              onClick={() => setAnonymous((prev) => !prev)}
-              className={`relative h-7 w-12 rounded-full transition-colors ${anonymous ? 'bg-navy' : 'bg-gray-300'}`}
-            >
-              <span
-                className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${anonymous ? 'translate-x-6' : 'translate-x-1'}`}
-              />
-            </button>
-          </div>
-
-          <p className="text-right text-[11px] font-semibold text-gray-500">
-            Anonymous: {anonymous ? 'ON' : 'OFF'}
-          </p>
+              <p className="text-right text-[11px] font-semibold text-gray-500">
+                Anonymous: {anonymous ? 'ON' : 'OFF'}
+              </p>
+            </>
+          ) : null}
         </>
       ) : null}
 
@@ -259,6 +285,7 @@ export function ReportForm() {
           <h3 className="text-sm font-semibold text-navy">Review Before Submit</h3>
           <p className="text-xs text-gray-700"><span className="font-semibold">Type:</span> {typeValue || '-'}</p>
           <p className="text-xs text-gray-700"><span className="font-semibold">Location:</span> {locationValue || '-'}</p>
+          <p className="text-xs text-gray-700"><span className="font-semibold">Contact:</span> {contactValue || '-'}</p>
           <p className="text-xs text-gray-700"><span className="font-semibold">Description:</span> {descriptionValue || '-'}</p>
           <p className="text-xs text-gray-700"><span className="font-semibold">Witnesses:</span> {witnesses.length}</p>
           <p className="text-xs text-gray-700"><span className="font-semibold">Evidence files:</span> {evidenceFiles.length}</p>

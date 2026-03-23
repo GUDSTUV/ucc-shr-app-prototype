@@ -113,7 +113,10 @@ export default function UserDashbard({
           title="Resources"
           subtitle="Support information and guides"
         />
-             <Link href="/report/new" className="block">
+             <Link
+              href={`/report/new?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`}
+              className="block"
+            >
             <Button variant="report" className="w-full">
               <Plus size={18} /> New Report
             </Button>

@@ -2,12 +2,12 @@ import Link from 'next/link'
 
 const previewEvents = [
   {
-    title: 'Gender & Society Forum 2026',
+    title: 'Consent & Respect Campus Forum',
     dateLabel: '28 Mar 2026, 10:00 AM',
     venue: 'Senate Chamber, UCC',
   },
   {
-    title: 'Self-Defence Workshop for Students',
+    title: 'Bystander Intervention Skills Workshop',
     dateLabel: '04 Apr 2026, 2:00 PM',
     venue: 'Sports Complex, UCC',
   },
