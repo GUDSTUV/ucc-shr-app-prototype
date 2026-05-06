@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { nanoid } from 'nanoid'
-import { initPrisma } from '@/src/lib/prisma'
 
 type ReportBody = {
   type?: string
@@ -16,9 +15,18 @@ function buildReportCode() {
   return `RPT-${nanoid(4).toUpperCase()}-${nanoid(4).toUpperCase()}`
 }
 
+/**
+ * Report submission endpoint (Prototype).
+ * 
+ * For prototype phase, this endpoint:
+ * - Validates the report payload
+ * - Returns a tracking code
+ * - Does NOT persist to database (will be added later)
+ * 
+ * In production, integrate with Prisma to save reports to PostgreSQL.
+ */
 export async function POST(request: Request) {
   try {
-    const prisma = initPrisma()
     const body = await request.json() as ReportBody
 
     const type = body.type?.trim() ?? ''
@@ -31,24 +39,14 @@ export async function POST(request: Request) {
       )
     }
 
+    // Generate a unique tracking code for the report
     const code = buildReportCode()
-    const contact = body.contact?.trim() ?? ''
-    const witnesses = Array.isArray(body.witnesses) ? body.witnesses : []
 
-    await prisma.report.create({
-      data: {
-        code,
-        type,
-        description,
-        location: body.location?.trim() || null,
-        isAnonymous: body.isAnonymous ?? true,
-        files: Array.isArray(body.evidenceFiles) ? body.evidenceFiles : [],
-        notes: contact || witnesses.length > 0
-          ? JSON.stringify({ contact, witnesses })
-          : null,
-      },
-    })
+    // TODO: In production, persist to database using Prisma
+    // await prisma.report.create({ ... })
 
+    // For now, just return success with tracking code
+    // Offline-queued reports will receive this code when synced
     return NextResponse.json({ ok: true, code })
   } catch {
     return NextResponse.json(
@@ -57,3 +55,4 @@ export async function POST(request: Request) {
     )
   }
 }
+
