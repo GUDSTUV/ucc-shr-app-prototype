@@ -3,6 +3,12 @@
 import { useEffect } from 'react'
 import { flushQueuedReports } from '@/src/lib/offline-report-queue'
 
+declare global {
+  interface Window {
+    __cegradSwRegistered?: boolean
+  }
+}
+
 export function PWARegister() {
   useEffect(() => {
     const flushOnReconnect = async () => {
@@ -19,13 +25,17 @@ export function PWARegister() {
       }
     }
 
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+    const shouldRegisterSw = process.env.NODE_ENV === 'production'
+
+    if (shouldRegisterSw && typeof window !== 'undefined' && 'serviceWorker' in navigator && !window.__cegradSwRegistered) {
+      window.__cegradSwRegistered = true
       navigator.serviceWorker
         .register('/sw.js')
         .then(registration => {
           console.log('Service Worker registered:', registration)
         })
         .catch(error => {
+          window.__cegradSwRegistered = false
           console.log('Service Worker registration failed:', error)
         })
     }

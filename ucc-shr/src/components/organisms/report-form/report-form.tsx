@@ -29,7 +29,6 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submittedCode, setSubmittedCode] = useState<string | null>(null)
   const [stepError, setStepError] = useState<string | null>(null)
-  const [queuedOffline, setQueuedOffline] = useState(false)
 
   useEffect(() => {
     if (!canToggleAnonymous) {
@@ -44,7 +43,6 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
       const syncedCount = customEvent.detail?.syncedCount ?? 0
 
       if (syncedCount > 0) {
-        setQueuedOffline(false)
         setSubmittedCode(syncedCodes[0] ?? null)
         setSubmitError(null)
       }
@@ -78,7 +76,6 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
     setSubmitting(true)
     setSubmitError(null)
     setSubmittedCode(null)
-    setQueuedOffline(false)
 
     const payload = {
       type: typeValue,
@@ -104,7 +101,6 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
 
     const queueForLater = () => {
       const queuedId = queueReport(payload)
-      setQueuedOffline(true)
       setSubmittedCode(`${queuedId.slice(-6).toUpperCase()}`)
       setSubmitError(null)
       resetForm()
