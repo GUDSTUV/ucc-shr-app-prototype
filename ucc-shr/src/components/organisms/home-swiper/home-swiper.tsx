@@ -26,7 +26,7 @@ const slides: Slide[] = [
   },
   {
     title: 'Fast & Simple',
-    message: 'Complete your report in a few steps on mobile or desktop without long forms.',
+    message: 'Complete your report in a few steps without long forms.',
   },
   {
     title: 'Track & Follow Up',
