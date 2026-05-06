@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { nanoid } from 'nanoid'
-import { prisma } from '@/src/lib/prisma'
+import { initPrisma } from '@/src/lib/prisma'
 
 type ReportBody = {
   type?: string
@@ -18,6 +18,7 @@ function buildReportCode() {
 
 export async function POST(request: Request) {
   try {
+    const prisma = initPrisma()
     const body = await request.json() as ReportBody
 
     const type = body.type?.trim() ?? ''
