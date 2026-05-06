@@ -8,6 +8,7 @@ import { Select } from '@/src/components/atoms/select'
 import { FormField } from '@/src/components/molecules/form-field'
 import { StepIndicator } from '@/src/components/molecules/step-indicator'
 import { AlertBox } from '@/src/components/molecules/alert-box'
+import { queueReport } from '@/src/lib/offline-report-queue'
 
 type ReportFormProps = {
   canToggleAnonymous?: boolean
@@ -28,12 +29,32 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submittedCode, setSubmittedCode] = useState<string | null>(null)
   const [stepError, setStepError] = useState<string | null>(null)
+  const [queuedOffline, setQueuedOffline] = useState(false)
 
   useEffect(() => {
     if (!canToggleAnonymous) {
       setAnonymous(true)
     }
   }, [canToggleAnonymous])
+
+  useEffect(() => {
+    const onSyncComplete = (event: Event) => {
+      const customEvent = event as CustomEvent<{ syncedCount?: number; syncedCodes?: string[] }>
+      const syncedCodes = customEvent.detail?.syncedCodes ?? []
+      const syncedCount = customEvent.detail?.syncedCount ?? 0
+
+      if (syncedCount > 0) {
+        setQueuedOffline(false)
+        setSubmittedCode(syncedCodes[0] ?? null)
+        setSubmitError(null)
+      }
+    }
+
+    window.addEventListener('report-sync-complete', onSyncComplete)
+    return () => {
+      window.removeEventListener('report-sync-complete', onSyncComplete)
+    }
+  }, [])
 
   const addWitness = () => {
     const value = witness.trim()
@@ -57,6 +78,7 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
     setSubmitting(true)
     setSubmitError(null)
     setSubmittedCode(null)
+    setQueuedOffline(false)
 
     const payload = {
       type: typeValue,
@@ -66,6 +88,32 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
       isAnonymous: canToggleAnonymous ? anonymous : true,
       witnesses,
       evidenceFiles,
+    }
+
+    const resetForm = () => {
+      setStep(1)
+      setTypeValue('')
+      setLocationValue('')
+      setContactValue('')
+      setDescriptionValue('')
+      setWitness('')
+      setWitnesses([])
+      setEvidenceFiles([])
+      setAnonymous(true)
+    }
+
+    const queueForLater = () => {
+      const queuedId = queueReport(payload)
+      setQueuedOffline(true)
+      setSubmittedCode(`PENDING-${queuedId.slice(-6).toUpperCase()}`)
+      setSubmitError(null)
+      resetForm()
+    }
+
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      queueForLater()
+      setSubmitting(false)
+      return
     }
 
     try {
@@ -89,17 +137,9 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
       }
 
       setSubmittedCode(result.code ?? null)
-  setStep(1)
-  setTypeValue('')
-  setLocationValue('')
-  setContactValue('')
-  setDescriptionValue('')
-      setWitness('')
-      setWitnesses([])
-      setEvidenceFiles([])
-      setAnonymous(true)
+      resetForm()
     } catch {
-      setSubmitError('Network error while submitting report. Please try again.')
+      queueForLater()
     } finally {
       setSubmitting(false)
     }
@@ -126,9 +166,15 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
       <StepIndicator step={step} total={totalSteps} />
 
       {submittedCode ? (
-        <AlertBox variant="success" title="Report submitted successfully">
-          Your tracking code is {submittedCode}. Save it to follow updates.
-        </AlertBox>
+        queuedOffline ? (
+          <AlertBox variant="info" title="Saved offline and queued for sync">
+            Your temporary code is {submittedCode}. We will auto-submit this report when internet is back.
+          </AlertBox>
+        ) : (
+          <AlertBox variant="success" title="Report submitted successfully">
+            Your tracking code is {submittedCode}. Save it to follow updates.
+          </AlertBox>
+        )
       ) : null}
 
       {submitError ? (
