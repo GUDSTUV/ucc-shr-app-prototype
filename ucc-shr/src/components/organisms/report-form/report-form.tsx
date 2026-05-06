@@ -143,8 +143,8 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
         </AlertBox>
       ) : null}
 
-      <AlertBox variant="info" title="Safety note">
-        Do not include identifying details if you want to remain anonymous.
+      <AlertBox variant="info" title="Note">
+        All fields marked with * must be completed before submission.
       </AlertBox>
 
       {step === 1 ? (
@@ -172,7 +172,7 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
               name="contact"
               value={contactValue}
               onChange={(event) => setContactValue(event.target.value)}
-              placeholder="How can we reach you for follow-up?"
+              placeholder="Phone number or email for follow-up"
             />
           </FormField>
 
@@ -289,7 +289,6 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
           <p className="text-xs text-gray-700"><span className="font-semibold">Description:</span> {descriptionValue || '-'}</p>
           <p className="text-xs text-gray-700"><span className="font-semibold">Witnesses:</span> {witnesses.length}</p>
           <p className="text-xs text-gray-700"><span className="font-semibold">Evidence files:</span> {evidenceFiles.length}</p>
-          <p className="text-xs text-gray-700"><span className="font-semibold">Anonymous:</span> {anonymous ? 'Yes' : 'No'}</p>
         </div>
       ) : null}
 

@@ -16,13 +16,13 @@ const slides: Slide[] = [
     title: "Don't Stay Silent",
     message: 'Report sexual harassment today. Help is here. You deserve to be heard and supported.',
   },
+   {
+    title: 'Anonymous Report',
+    message: 'Your identity remains anonymous for all reports submitted through this system.',
+  },
   {
     title: 'Learn & Recognize',
     message: 'Understand warning signs like unwanted messages, coercion, intimidation, and repeated boundary violations so you can recognize harmful behavior.',
-  },
-  {
-    title: 'Anonymous Reporting',
-    message: 'Share what happened without revealing your identity when you choose anonymous mode.',
   },
   {
     title: 'Fast & Simple',

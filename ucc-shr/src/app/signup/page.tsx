@@ -62,7 +62,7 @@ export default function SignupPage() {
 
       <div className="flex flex-wrap items-center gap-3 text-[13px] font-medium">
         <Link href="/login" className="text-navy underline underline-offset-2">
-          Already have an account? Login
+          Already have an account? Log in
         </Link>
         <Link href="/report/new" className="text-red underline underline-offset-2">
           Continue as Guest

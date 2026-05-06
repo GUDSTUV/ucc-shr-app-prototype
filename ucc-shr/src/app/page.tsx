@@ -67,7 +67,7 @@ export default function HomePage() {
         noBorder
         className="p-0"
       >
-        All submissions are anonymous and seen only by CEGRAD staff.
+        All submissions are anonymous and accessible only to CEGRAD staff.
       </AlertBox>
 
       <HomeEventsPreview />

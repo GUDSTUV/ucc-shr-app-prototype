@@ -7,7 +7,7 @@ export default function ReportAccessPage() {
   return (
     <FormLayout title="Report Incident">
       <AlertBox variant="info" title="Choose how to continue">
-        You can sign in, create an account, or continue as a guest for anonymous reporting.
+        You can sign in, create an account, or continue as a guest.
       </AlertBox>
 
       <div className="space-y-3 rounded-xl border border-gray-100 bg-white p-4">
@@ -32,8 +32,15 @@ export default function ReportAccessPage() {
           className="flex items-center gap-3 rounded-xl bg-red px-4 py-3 text-sm font-semibold text-white hover:bg-red-dark"
         >
           <ShieldCheck size={18} />
-          Continue as Guest (Anonymous)
+          Continue as Guest Report
         </Link>
+
+        <div className="rounded-xl bg-red-50 px-4 py-3 border border-red/20">
+          <p className="text-xs text-red-900 font-semibold">Guest Mode:</p>
+          <p className="text-xs text-red-800 mt-1">
+            No account needed. Your report stays anonymous and is tracked by a code. Perfect for urgent situations or if you prefer not to create an account.
+          </p>
+        </div>
       </div>
     </FormLayout>
   )

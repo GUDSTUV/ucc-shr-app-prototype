@@ -12,12 +12,12 @@ export default function TrackPage() {
       </AlertBox>
 
       <form className="space-y-4 rounded-[12px] border border-gray-100 bg-white p-4">
-        <FormField label="Tracking Code">
+        <FormField label="Tracking code">
           <Input placeholder="Example: UCC-2026-AB12" />
         </FormField>
 
         <Button type="submit" fullWidth>
-          Track Status
+          Check report status
         </Button>
       </form>
     </FormLayout>

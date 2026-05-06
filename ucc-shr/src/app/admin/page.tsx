@@ -97,7 +97,7 @@ export default function AdminDashboardPage() {
           <div className="relative w-full lg:max-w-[460px]">
             <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <Input
-              placeholder="Search cases, IDs, or investigator"
+              placeholder="Search report codes, categories, or case staff"
               className="h-11 border-gray-200 bg-white pl-9 text-sm"
             />
           </div>

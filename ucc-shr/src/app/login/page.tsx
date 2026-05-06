@@ -57,7 +57,7 @@ export default function LoginPage() {
 
       <div className="flex flex-wrap items-center gap-3 text-[13px] font-medium">
         <Link href="/signup" className="text-navy underline underline-offset-2">
-          Create account
+          Create an account
         </Link>
         <Link href="/report/new" className="text-red underline underline-offset-2">
           Continue as Guest
