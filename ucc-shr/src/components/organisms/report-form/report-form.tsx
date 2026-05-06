@@ -105,7 +105,7 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
     const queueForLater = () => {
       const queuedId = queueReport(payload)
       setQueuedOffline(true)
-      setSubmittedCode(`PENDING-${queuedId.slice(-6).toUpperCase()}`)
+      setSubmittedCode(`${queuedId.slice(-6).toUpperCase()}`)
       setSubmitError(null)
       resetForm()
     }
@@ -166,15 +166,9 @@ export function ReportForm({ canToggleAnonymous = false }: ReportFormProps) {
       <StepIndicator step={step} total={totalSteps} />
 
       {submittedCode ? (
-        queuedOffline ? (
-          <AlertBox variant="info" title="Saved offline and queued for sync">
-            Your temporary code is {submittedCode}. We will auto-submit this report when internet is back.
-          </AlertBox>
-        ) : (
-          <AlertBox variant="success" title="Report submitted successfully">
-            Your tracking code is {submittedCode}. Save it to follow updates.
-          </AlertBox>
-        )
+        <AlertBox variant="success" title="Report submitted successfully">
+          Your tracking code is {submittedCode}. Save it to follow updates.
+        </AlertBox>
       ) : null}
 
       {submitError ? (

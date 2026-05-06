@@ -1,30 +1,38 @@
 const CACHE_VERSION = '2'
 const CACHE_NAME = `cegrad-ucc-v${CACHE_VERSION}`
-const OFFLINE_URL = '/offline.html'
 const STATIC_CACHE = `cegrad-ucc-static-v${CACHE_VERSION}`
 const DYNAMIC_CACHE = `cegrad-ucc-dynamic-v${CACHE_VERSION}`
 
 const PRECACHE_URLS = [
   '/',
-  OFFLINE_URL,
   '/manifest.json',
   '/icons/launchericon-192x192.png',
   '/icons/launchericon-512x512.png',
   '/about',
+  '/events',
   '/events/',
+  '/help',
   '/help/',
+  '/hub',
   '/hub/',
+  '/login',
   '/login/',
+  '/signup',
   '/signup/',
+  '/report',
   '/report/',
   '/report/new',
+  '/track',
   '/track/',
+  '/admin',
   '/admin/',
+  '/user/profile',
+  '/user/notifications',
+  '/user/userDashboard',
 ]
 
 const CRITICAL_URLS = new Set([
   '/',
-  OFFLINE_URL,
   '/manifest.json',
 ])
 
@@ -84,17 +92,21 @@ self.addEventListener('fetch', event => {
   }
 
   if (event.request.mode === 'navigate') {
+    const isOnline = navigator.onLine ?? true
+
     event.respondWith(
       caches.match(event.request)
         .then(cachedResponse => {
           if (cachedResponse) {
-            fetch(event.request).then(networkResponse => {
-              if (networkResponse && networkResponse.status === 200) {
-                caches.open(DYNAMIC_CACHE).then(cache => {
-                  cache.put(event.request, networkResponse)
-                })
-              }
-            }).catch(() => {})
+            if (isOnline) {
+              fetch(event.request).then(networkResponse => {
+                if (networkResponse && networkResponse.status === 200) {
+                  caches.open(DYNAMIC_CACHE).then(cache => {
+                    cache.put(event.request, networkResponse)
+                  })
+                }
+              }).catch(() => {})
+            }
             return cachedResponse
           }
 
@@ -112,7 +124,7 @@ self.addEventListener('fetch', event => {
               return response
             })
             .catch(() => {
-              return caches.match('/') || caches.match(OFFLINE_URL)
+              return caches.match('/')
             })
         })
     )
