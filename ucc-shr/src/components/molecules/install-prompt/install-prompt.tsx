@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Button } from '@/src/components/atoms/button'
+import { useEffect } from 'react'
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>
@@ -9,55 +8,29 @@ type BeforeInstallPromptEvent = Event & {
 }
 
 export function InstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
-  const [canInstall, setCanInstall] = useState(false)
-
   useEffect(() => {
     if (typeof window === 'undefined') return
 
+    // Check if already installed (standalone mode)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    if (isStandalone) {
-      setCanInstall(false)
-      return
-    }
+    if (isStandalone) return
 
-    const handleBeforeInstallPrompt = (event: Event) => {
+    const handleBeforeInstallPrompt = async (event: Event) => {
       event.preventDefault()
-      setDeferredPrompt(event as BeforeInstallPromptEvent)
-      setCanInstall(true)
-    }
+      const promptEvent = event as BeforeInstallPromptEvent
 
-    const handleAppInstalled = () => {
-      setDeferredPrompt(null)
-      setCanInstall(false)
+      // Show native install popup automatically
+      await promptEvent.prompt()
+      await promptEvent.userChoice
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    window.addEventListener('appinstalled', handleAppInstalled)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appinstalled', handleAppInstalled)
     }
   }, [])
 
-  const handleInstall = async () => {
-    if (!deferredPrompt) return
-
-    await deferredPrompt.prompt()
-    await deferredPrompt.userChoice
-    setDeferredPrompt(null)
-    setCanInstall(false)
-  }
-
-  if (!canInstall) return null
-
-  return (
-    <div className="space-y-1">
-      <Button variant="outline" fullWidth onClick={handleInstall}>
-        Install App
-      </Button>
-      <p className="text-[11px] text-gray-500">Install for faster access and a full-screen experience.</p>
-    </div>
-  )
+  // No UI - browser shows native popup automatically
+  return null
 }
