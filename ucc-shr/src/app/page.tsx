@@ -1,6 +1,7 @@
 import { PublicLayout } from '@/src/components/templates/public-layout'
 import { Button }       from '@/src/components/atoms/button'
 import { AlertBox }     from '@/src/components/molecules/alert-box'
+import { InstallPrompt } from '@/src/components/molecules/install-prompt'
 import { HomeSwiper }   from '@/src/components/organisms/home-swiper'
 import { HomeEventsPreview } from '@/src/components/organisms/home-events-preview'
 import { HomeEmergencyCard } from '@/src/components/organisms/home-emergency-card'
@@ -57,6 +58,8 @@ export default function HomePage() {
             <SearchCheck size={18} /> Track Report
           </Button>
         </Link>
+
+        <InstallPrompt />
       </div>
 
       {/* Safety message */}
