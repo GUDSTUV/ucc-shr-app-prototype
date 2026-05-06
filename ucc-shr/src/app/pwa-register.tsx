@@ -3,9 +3,15 @@
 import { useEffect } from 'react'
 import { flushQueuedReports } from '@/src/lib/offline-report-queue'
 
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
+
 declare global {
   interface Window {
     __cegradSwRegistered?: boolean
+    __cegradInstallPrompt?: BeforeInstallPromptEvent | null
   }
 }
 
@@ -27,6 +33,18 @@ export function PWARegister() {
 
     const shouldRegisterSw = process.env.NODE_ENV === 'production'
 
+    const onBeforeInstall = (event: Event) => {
+      event.preventDefault()
+      window.__cegradInstallPrompt = event as BeforeInstallPromptEvent
+    }
+
+    const onInstalled = () => {
+      window.__cegradInstallPrompt = null
+    }
+
+    window.addEventListener('beforeinstallprompt', onBeforeInstall)
+    window.addEventListener('appinstalled', onInstalled)
+
     if (shouldRegisterSw && typeof window !== 'undefined' && 'serviceWorker' in navigator && !window.__cegradSwRegistered) {
       window.__cegradSwRegistered = true
       navigator.serviceWorker
@@ -44,6 +62,8 @@ export function PWARegister() {
     window.addEventListener('online', flushOnReconnect)
 
     return () => {
+      window.removeEventListener('beforeinstallprompt', onBeforeInstall)
+      window.removeEventListener('appinstalled', onInstalled)
       window.removeEventListener('online', flushOnReconnect)
     }
   }, [])

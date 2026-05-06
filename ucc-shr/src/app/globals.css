@@ -65,7 +65,7 @@ body {
 }
 
 .app-fade-in {
-  animation: app-fade-in 240ms ease-out both;
+  animation: app-fade-in 600ms ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,11 +1,12 @@
 import { PublicLayout } from '@/src/components/templates/public-layout'
 import { Button }       from '@/src/components/atoms/button'
 import { AlertBox }     from '@/src/components/molecules/alert-box'
+import { ReportInstallCta } from '@/src/components/molecules/report-install-cta'
 import { HomeSwiper }   from '@/src/components/organisms/home-swiper'
 import { HomeEventsPreview } from '@/src/components/organisms/home-events-preview'
 import { HomeEmergencyCard } from '@/src/components/organisms/home-emergency-card'
 import { HomeFaq } from '@/src/components/organisms/home-faq'
-import { Flag, SearchCheck } from 'lucide-react'
+import { SearchCheck } from 'lucide-react'
 import Image from 'next/image'
 import Link             from 'next/link'
 
@@ -43,11 +44,7 @@ export default function HomePage() {
       <HomeSwiper />
 
       {/* Report CTA */}
-      <Link href="/report">
-        <Button variant="report" size="lg">
-          <Flag size={20} /> Report an Incident
-        </Button>
-      </Link>
+      <ReportInstallCta />
 
       {/* Quick actions */}
       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
