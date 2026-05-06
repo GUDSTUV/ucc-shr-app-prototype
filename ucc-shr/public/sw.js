@@ -1,11 +1,14 @@
-const CACHE_VERSION = '2'
+const CACHE_VERSION = '3'
 const CACHE_NAME = `cegrad-ucc-v${CACHE_VERSION}`
 const STATIC_CACHE = `cegrad-ucc-static-v${CACHE_VERSION}`
 const DYNAMIC_CACHE = `cegrad-ucc-dynamic-v${CACHE_VERSION}`
+const OFFLINE_URL = '/offline.html'
 
 const PRECACHE_URLS = [
   '/',
   '/manifest.json',
+  '/offline.html',
+  '/icons/logo.svg',
   '/icons/launchericon-192x192.png',
   '/icons/launchericon-512x512.png',
   '/about',
@@ -41,15 +44,22 @@ const urlsToCache = PRECACHE_URLS
 // Install event
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache)
-        .catch(err => {
-          console.warn('Precache failed; continuing with critical urls:', err)
-          return Promise.all(
-            Array.from(CRITICAL_URLS)
-              .map(url => cache.add(url).catch(() => {}))
-          )
+    caches.open(CACHE_NAME).then(async cache => {
+      // Add items individually so one failing resource doesn't reject the whole batch
+      await Promise.all(
+        urlsToCache.map(async url => {
+          try {
+            await cache.add(url)
+          } catch (err) {
+            console.warn('Failed to precache', url, err)
+          }
         })
+      )
+
+      // Make sure critical urls are present (best-effort)
+      await Promise.all(
+        Array.from(CRITICAL_URLS).map(url => cache.add(url).catch(() => {}))
+      )
     })
   )
   self.skipWaiting()
@@ -124,7 +134,9 @@ self.addEventListener('fetch', event => {
               return response
             })
             .catch(() => {
-              return caches.match('/')
+              return caches.match(OFFLINE_URL).then(offlinePage => {
+                return offlinePage || caches.match('/')
+              })
             })
         })
     )
