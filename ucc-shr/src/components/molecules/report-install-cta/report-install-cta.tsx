@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-const PROMPT_COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000
+const PROMPT_COOLDOWN_MS = 10 * 60 * 1000
 const LAST_PROMPT_KEY = 'cegrad-install-prompt-last'
 
 export function ReportInstallCta() {
